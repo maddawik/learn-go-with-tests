@@ -32,5 +32,11 @@ func SumAllTails(numbersToSum ...[]int) []int {
 }
 
 func SumAllHeads(numbersToSum ...[]int) int {
-	return 0
+	var sum int
+
+	for _, number := range numbersToSum {
+		sum += number[0]
+	}
+
+	return sum
 }
