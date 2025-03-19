@@ -57,3 +57,14 @@ func TestSumAllTails(t *testing.T) {
 		checkSums(t, got, want)
 	})
 }
+
+func TestSumAllHeads(t *testing.T) {
+	t.Run("gets the sum of the head of some slices", func(t *testing.T) {
+		got := SumAllHeads([]int{1, 2}, []int{5, 6})
+		want := 6
+
+		if got != want {
+			t.Errorf("got %d want %d", got, want)
+		}
+	})
+}
