@@ -30,3 +30,7 @@ func SumAllTails(numbersToSum ...[]int) []int {
 
 	return sums
 }
+
+func SumAllHeads(numbersToSum ...[]int) int {
+	return 0
+}
