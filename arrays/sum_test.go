@@ -67,4 +67,13 @@ func TestSumAllHeads(t *testing.T) {
 			t.Errorf("got %d want %d", got, want)
 		}
 	})
+
+	t.Run("sums empty slices", func(t *testing.T) {
+		got := SumAllHeads([]int{}, []int{20, 30})
+		want := 20
+
+		if got != want {
+			t.Errorf("got %d want %d", got, want)
+		}
+	})
 }
