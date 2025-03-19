@@ -59,21 +59,21 @@ func TestSumAllTails(t *testing.T) {
 }
 
 func TestSumAllHeads(t *testing.T) {
-	t.Run("gets the sum of the head of some slices", func(t *testing.T) {
-		got := SumAllHeads([]int{1, 2}, []int{5, 6})
-		want := 6
-
+	checkSums := func(t testing.TB, got, want int) {
+		t.Helper()
 		if got != want {
 			t.Errorf("got %d want %d", got, want)
 		}
+	}
+	t.Run("gets the sum of the head of some slices", func(t *testing.T) {
+		got := SumAllHeads([]int{1, 2}, []int{5, 6})
+		want := 6
+		checkSums(t, got, want)
 	})
 
 	t.Run("sums empty slices", func(t *testing.T) {
 		got := SumAllHeads([]int{}, []int{20, 30})
 		want := 20
-
-		if got != want {
-			t.Errorf("got %d want %d", got, want)
-		}
+		checkSums(t, got, want)
 	})
 }
