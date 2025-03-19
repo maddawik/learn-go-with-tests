@@ -34,8 +34,11 @@ func SumAllTails(numbersToSum ...[]int) []int {
 func SumAllHeads(numbersToSum ...[]int) int {
 	var sum int
 
-	for _, number := range numbersToSum {
-		sum += number[0]
+	for _, numbers := range numbersToSum {
+		if len(numbers) == 0 {
+			continue
+		}
+		sum += numbers[0]
 	}
 
 	return sum
