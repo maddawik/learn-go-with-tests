@@ -16,10 +16,10 @@ var (
 	coundownStart = 3
 )
 
-func Countdown(out io.Writer) {
+func Countdown(out io.Writer, sleeper Sleeper) {
 	for i := coundownStart; i > 0; i-- {
 		fmt.Fprintln(out, i)
-		time.Sleep(1 * time.Second)
+		sleeper.Sleep()
 	}
 	fmt.Fprint(out, finalWord)
 }
