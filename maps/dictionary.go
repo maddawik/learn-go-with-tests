@@ -44,6 +44,9 @@ func (d Dictionary) Update(word, definition string) error {
 	return nil
 }
 
+func (d Dictionary) Delete(word string) {
+}
+
 func (d Dictionary) Search(word string) (string, error) {
 	definition, ok := d[word]
 
