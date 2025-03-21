@@ -71,6 +71,16 @@ func TestUpdate(t *testing.T) {
 	})
 }
 
+func TestDelete(t *testing.T) {
+	word := "the legend of zelda"
+	dictionary := Dictionary{word: "tears of the kingdom"}
+
+	dictionary.Delete(word)
+
+	_, err := dictionary.Search(word)
+	assertError(t, err, ErrNotFound)
+}
+
 func assertDefinition(t testing.TB, dictionary Dictionary, word, definition string) {
 	t.Helper()
 
