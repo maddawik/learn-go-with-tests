@@ -72,13 +72,25 @@ func TestUpdate(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
-	word := "the legend of zelda"
-	dictionary := Dictionary{word: "tears of the kingdom"}
+	t.Run("existing word", func(t *testing.T) {
+		word := "the legend of zelda"
+		dictionary := Dictionary{word: "tears of the kingdom"}
 
-	dictionary.Delete(word)
+		err := dictionary.Delete(word)
 
-	_, err := dictionary.Search(word)
-	assertError(t, err, ErrNotFound)
+		assertError(t, err, nil)
+
+		_, err = dictionary.Search(word)
+		assertError(t, err, ErrNotFound)
+	})
+
+	t.Run("non-existing word", func(t *testing.T) {
+		dictionary := Dictionary{}
+
+		err := dictionary.Delete("mario")
+
+		assertError(t, err, ErrWordDoesNotExist)
+	})
 }
 
 func assertDefinition(t testing.TB, dictionary Dictionary, word, definition string) {
