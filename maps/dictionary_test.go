@@ -2,6 +2,19 @@ package main
 
 import "testing"
 
+func TestAdd(t *testing.T) {
+	dictionary := Dictionary{}
+	dictionary.Add("metroid", "prime")
+
+	want := "prime"
+	got, err := dictionary.Search("metroid")
+	if err != nil {
+		t.Fatal("shouldn't have got an error:", err)
+	}
+
+	assertStrings(t, got, want)
+}
+
 func TestSearch(t *testing.T) {
 	dictionary := Dictionary{"test": "testing things"}
 	t.Run("known word", func(t *testing.T) {
