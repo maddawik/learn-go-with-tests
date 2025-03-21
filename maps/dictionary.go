@@ -1,8 +1,9 @@
 package main
 
 const (
-	ErrNotFound   = DictionaryErr("this isn't the word you're looking for")
-	ErrWordExists = DictionaryErr("you know this word... think")
+	ErrNotFound         = DictionaryErr("this isn't the word you're looking for")
+	ErrWordExists       = DictionaryErr("you know this word... think")
+	ErrWordDoesNotExist = DictionaryErr("this is a made up word and you're not Shakespeare")
 )
 
 type DictionaryErr string
@@ -28,8 +29,9 @@ func (d Dictionary) Add(word, definition string) error {
 	return nil
 }
 
-func (d Dictionary) Update(word, definition string) {
+func (d Dictionary) Update(word, definition string) error {
 	d[word] = definition
+	return nil
 }
 
 func (d Dictionary) Search(word string) (string, error) {
