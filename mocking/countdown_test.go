@@ -5,6 +5,14 @@ import (
 	"testing"
 )
 
+type SpySleeper struct {
+	Calls int
+}
+
+func (s *SpySleeper) Sleep() {
+	s.Calls++
+}
+
 func TestCoundown(t *testing.T) {
 	buffer := &bytes.Buffer{}
 
