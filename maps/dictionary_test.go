@@ -4,19 +4,17 @@ import "testing"
 
 func TestAdd(t *testing.T) {
 	dictionary := Dictionary{}
-	dictionary.Add("metroid", "prime")
+	word := "metroid"
+	definition := "prime"
 
-	want := "prime"
-	got, err := dictionary.Search("metroid")
-	if err != nil {
-		t.Fatal("shouldn't have got an error:", err)
-	}
+	dictionary.Add(word, definition)
 
-	assertStrings(t, got, want)
+	assertDefinition(t, dictionary, word, definition)
 }
 
 func TestSearch(t *testing.T) {
 	dictionary := Dictionary{"test": "testing things"}
+
 	t.Run("known word", func(t *testing.T) {
 		got, _ := dictionary.Search("test")
 		want := "testing things"
@@ -33,6 +31,17 @@ func TestSearch(t *testing.T) {
 
 		assertError(t, err, ErrNotFound)
 	})
+}
+
+func assertDefinition(t testing.TB, dictionary Dictionary, word, definition string) {
+	t.Helper()
+
+	got, err := dictionary.Search(word)
+	if err != nil {
+		t.Fatal("shouldn't have got an error:", err)
+	}
+
+	assertStrings(t, got, definition)
 }
 
 func assertStrings(t testing.TB, got, want string) {
