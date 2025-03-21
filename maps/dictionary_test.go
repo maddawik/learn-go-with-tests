@@ -47,6 +47,17 @@ func TestSearch(t *testing.T) {
 	})
 }
 
+func TestUpdate(t *testing.T) {
+	word := "paper mario"
+	definition := "the origami king"
+	dictionary := Dictionary{word: definition}
+	newDefinition := "the thousand-year door"
+
+	dictionary.Update(word, newDefinition)
+
+	assertDefinition(t, dictionary, word, newDefinition)
+}
+
 func assertDefinition(t testing.TB, dictionary Dictionary, word, definition string) {
 	t.Helper()
 
