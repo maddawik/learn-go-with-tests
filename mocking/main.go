@@ -40,6 +40,9 @@ func Countdown(out io.Writer, sleeper Sleeper) {
 }
 
 func main() {
-	sleeper := &DefaultSleeper{}
+	sleeper := &ConfigurableSleeper{
+		duration: 3 * time.Second,
+		sleep:    time.Sleep,
+	}
 	Countdown(os.Stdout, sleeper)
 }
