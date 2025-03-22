@@ -69,3 +69,19 @@ Go!`
 		}
 	})
 }
+
+func TestConfigurableSleeper(t *testing.T) {
+	sleepTime := 5 * time.Second
+
+	spyTime := &SpyTime{}
+	sleeper := ConfigurableSleeper{
+		duration: sleepTime,
+		sleep:    spyTime.Sleep,
+	}
+
+	sleeper.Sleep()
+
+	if spyTime.durationSlept != sleepTime {
+		t.Errorf("expected to sleep for %v but slept for %v", sleepTime, spyTime.durationSlept)
+	}
+}
