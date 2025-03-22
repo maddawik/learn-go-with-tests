@@ -18,6 +18,9 @@ type ConfigurableSleeper struct {
 	sleep    func(time.Duration)
 }
 
+func (c *ConfigurableSleeper) Sleep() {
+}
+
 func (d *DefaultSleeper) Sleep() {
 	time.Sleep(1 * time.Second)
 }
