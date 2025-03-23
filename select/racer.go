@@ -6,13 +6,13 @@ import (
 	"time"
 )
 
-func Racer(a, b string) (winner string, err error) {
+func Racer(a, b string, timeout time.Duration) (winner string, err error) {
 	select {
 	case <-ping(a):
 		return a, nil
 	case <-ping(b):
 		return b, nil
-	case <-time.After(10 * time.Second):
+	case <-time.After(timeout):
 		return "", fmt.Errorf("timed out waiting for %v and %v", a, b)
 	}
 }
