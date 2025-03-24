@@ -5,6 +5,13 @@ import "reflect"
 func walk(x interface{}, fn func(input string)) {
 	val := getValue(x)
 
+	if val.Kind() == reflect.Slice {
+		for i := range val.Len() {
+			walk(val.Index(i).Interface(), fn)
+		}
+		return
+	}
+
 	for i := range val.NumField() {
 		field := val.Field(i)
 
