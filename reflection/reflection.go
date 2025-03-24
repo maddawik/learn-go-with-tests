@@ -5,14 +5,13 @@ import "reflect"
 func walk(x interface{}, fn func(input string)) {
 	val := reflect.ValueOf(x)
 
-	for i := 0; i < val.NumField(); i++ {
+	for i := range val.NumField() {
 		field := val.Field(i)
 
-		if field.Kind() == reflect.String {
+		switch field.Kind() {
+		case reflect.String:
 			fn(field.String())
-		}
-
-		if field.Kind() == reflect.Struct {
+		case reflect.Struct:
 			walk(field.Interface(), fn)
 		}
 	}
