@@ -5,6 +5,10 @@ import "reflect"
 func walk(x interface{}, fn func(input string)) {
 	val := reflect.ValueOf(x)
 
+	if val.Kind() == reflect.Pointer {
+		val = val.Elem()
+	}
+
 	for i := range val.NumField() {
 		field := val.Field(i)
 
