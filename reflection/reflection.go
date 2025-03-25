@@ -4,7 +4,7 @@ import (
 	"reflect"
 )
 
-func walk(x interface{}, fn func(input string)) {
+func walk(x any, fn func(input string)) {
 	val := getValue(x)
 
 	walkValue := func(value reflect.Value) {
@@ -15,11 +15,11 @@ func walk(x interface{}, fn func(input string)) {
 	case reflect.String:
 		fn(val.String())
 	case reflect.Struct:
-		for i := 0; i < val.NumField(); i++ {
+		for i := range val.NumField() {
 			walkValue(val.Field(i))
 		}
 	case reflect.Slice, reflect.Array:
-		for i := 0; i < val.Len(); i++ {
+		for i := range val.Len() {
 			walkValue(val.Index(i))
 		}
 	case reflect.Map:
@@ -42,7 +42,7 @@ func walk(x interface{}, fn func(input string)) {
 	}
 }
 
-func getValue(x interface{}) reflect.Value {
+func getValue(x any) reflect.Value {
 	val := reflect.ValueOf(x)
 
 	if val.Kind() == reflect.Pointer {

@@ -18,7 +18,7 @@ type Children struct {
 func TestWalk(t *testing.T) {
 	cases := []struct {
 		Name          string
-		Input         interface{}
+		Input         any
 		ExpectedCalls []string
 	}{
 		{
