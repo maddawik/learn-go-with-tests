@@ -11,14 +11,18 @@ func walk(x interface{}, fn func(input string)) {
 	var getField func(int) reflect.Value
 
 	switch val.Kind() {
+	case reflect.String:
+		fn(val.String())
 	case reflect.Struct:
 		numberOfFields = val.NumField()
 		getField = val.Field
 	case reflect.Slice, reflect.Array:
 		numberOfFields = val.Len()
 		getField = val.Index
-	case reflect.String:
-		fn(val.String())
+	case reflect.Map:
+		for _, key := range val.MapKeys() {
+			walk(val.MapIndex(key).Interface(), fn)
+		}
 	}
 
 	for i := 0; i < numberOfFields; i++ {
