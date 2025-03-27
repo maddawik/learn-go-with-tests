@@ -6,11 +6,15 @@ import (
 
 type Post struct{}
 
-func NewPostFromFS(filesystem fs.FS) []Post {
-	dir, _ := fs.ReadDir(filesystem, ".")
+func NewPostFromFS(filesystem fs.FS) ([]Post, error) {
+	dir, err := fs.ReadDir(filesystem, ".")
+	if err != nil {
+		return nil, err
+	}
+
 	var posts []Post
 	for range dir {
 		posts = append(posts, Post{})
 	}
-	return posts
+	return posts, nil
 }
