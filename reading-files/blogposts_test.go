@@ -77,6 +77,29 @@ Enrique`,
 			t.Error("expected an error but didn't get one")
 		}
 	})
+
+	t.Run("fs with some markdown files", func(t *testing.T) {
+		file := `Title: GNUs Not UNIX
+Description: Seriously
+Tags: gnu, linux
+---
+Bonjour
+GNU`
+
+		fs := fstest.MapFS{
+			"txt-is-not-md.txt": {Data: []byte("hello")},
+			"gnus-not-unix.md":  {Data: []byte(file)},
+		}
+
+		got, err := blogposts.NewPostsFromFS(fs)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if len(got) != 1 {
+			t.Errorf("got %d posts, expected ", len(got))
+		}
+	})
 }
 
 func assertPosts(t testing.TB, got blogposts.Post, want blogposts.Post) {
