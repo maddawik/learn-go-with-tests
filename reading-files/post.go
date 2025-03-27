@@ -3,6 +3,7 @@ package blogposts
 import (
 	"bufio"
 	"io"
+	"strings"
 )
 
 const (
@@ -18,12 +19,13 @@ type Post struct {
 func newPost(postFile io.Reader) (Post, error) {
 	scanner := bufio.NewScanner(postFile)
 
-	readLine := func() string {
+	readMetaLine := func(tagName string) string {
 		scanner.Scan()
-		return scanner.Text()
+		return strings.TrimPrefix(scanner.Text(), tagName)
 	}
-	titleLine := readLine()[len(titleSeparator):]
-	descriptionLine := readLine()[len(descriptionSeparator):]
 
-	return Post{Title: titleLine, Description: descriptionLine}, nil
+	return Post{
+		Title:       readMetaLine(titleSeparator),
+		Description: readMetaLine(descriptionSeparator),
+	}, nil
 }
