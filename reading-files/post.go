@@ -3,7 +3,8 @@ package blogposts
 import "io"
 
 type Post struct {
-	Title string
+	Title       string
+	Description string
 }
 
 func newPost(postFile io.Reader) (Post, error) {
