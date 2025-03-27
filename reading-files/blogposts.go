@@ -2,12 +2,11 @@ package blogposts
 
 import (
 	"io/fs"
-	"testing/fstest"
 )
 
 type Post struct{}
 
-func NewPostFromFS(filesystem fstest.MapFS) []Post {
+func NewPostFromFS(filesystem fs.FS) []Post {
 	dir, _ := fs.ReadDir(filesystem, ".")
 	var posts []Post
 	for range dir {
