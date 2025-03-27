@@ -1,6 +1,7 @@
 package blogposts
 
 import (
+	"errors"
 	"io/fs"
 )
 
@@ -8,6 +9,10 @@ func NewPostsFromFS(filesystem fs.FS) ([]Post, error) {
 	dir, err := fs.ReadDir(filesystem, ".")
 	if err != nil {
 		return nil, err
+	}
+
+	if len(dir) == 0 {
+		return nil, errors.New("no posts to parse in directory")
 	}
 
 	var posts []Post
