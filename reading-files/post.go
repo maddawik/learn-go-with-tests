@@ -13,11 +13,12 @@ type Post struct {
 func newPost(postFile io.Reader) (Post, error) {
 	scanner := bufio.NewScanner(postFile)
 
-	scanner.Scan()
-	titleLine := scanner.Text()
+	readLine := func() string {
+		scanner.Scan()
+		return scanner.Text()
+	}
+	titleLine := readLine()[7:]
+	descriptionLine := readLine()[13:]
 
-	scanner.Scan()
-	descriptionLine := scanner.Text()
-
-	return Post{Title: titleLine[7:], Description: descriptionLine[13:]}, nil
+	return Post{Title: titleLine, Description: descriptionLine}, nil
 }
