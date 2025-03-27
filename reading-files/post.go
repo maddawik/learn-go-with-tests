@@ -16,6 +16,7 @@ type Post struct {
 	Title       string
 	Description string
 	Tags        []string
+	Body        string
 }
 
 func newPost(postFile io.Reader) (Post, error) {
