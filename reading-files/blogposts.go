@@ -8,7 +8,7 @@ type Post struct {
 	Title string
 }
 
-func NewPostFromFS(filesystem fs.FS) ([]Post, error) {
+func NewPostsFromFS(filesystem fs.FS) ([]Post, error) {
 	dir, err := fs.ReadDir(filesystem, ".")
 	if err != nil {
 		return nil, err

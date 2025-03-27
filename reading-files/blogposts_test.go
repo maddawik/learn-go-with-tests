@@ -14,7 +14,7 @@ func TestBlogPosts(t *testing.T) {
 		"hello-world2.md": {Data: []byte("Title: Post 2")},
 	}
 
-	posts, err := blogposts.NewPostFromFS(fs)
+	posts, err := blogposts.NewPostsFromFS(fs)
 	if err != nil {
 		t.Fatal(err)
 	}
