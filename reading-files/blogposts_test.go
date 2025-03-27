@@ -11,9 +11,12 @@ import (
 func TestBlogPosts(t *testing.T) {
 	const (
 		firstBody = `Title: Post 1
-Description: Description 1`
+Description: Description 1
+Tags: go, tdd`
+
 		secondBody = `Title: Post 2
-Description: Description 2`
+Description: Description 2
+Tags: rust, borrow-checker`
 	)
 	fs := fstest.MapFS{
 		"hello world.md":  {Data: []byte(firstBody)},
@@ -28,6 +31,7 @@ Description: Description 2`
 	assertPosts(t, posts[0], blogposts.Post{
 		Title:       "Post 1",
 		Description: "Description 1",
+		Tags:        []string{"go", "tdd"},
 	})
 }
 
