@@ -9,22 +9,23 @@ import (
 )
 
 func TestBlogPosts(t *testing.T) {
-	t.Run("fs with 2 valid files", func(t *testing.T) {
-		const (
-			firstBody = `Title: Post 1
+	const (
+		firstBody = `Title: Post 1
 Description: Description 1
 Tags: go, tdd
 ---
 Hello
 World`
 
-			secondBody = `Title: Post 2
+		secondBody = `Title: Post 2
 Description: Description 2
 Tags: rust, borrow-checker
 ---
 Hola
 Enrique`
-		)
+	)
+
+	t.Run("fs with 2 valid files", func(t *testing.T) {
 		fs := fstest.MapFS{
 			"hello world.md":  {Data: []byte(firstBody)},
 			"hello-world2.md": {Data: []byte(secondBody)},
@@ -55,6 +56,22 @@ Enrique`,
 		fs := fstest.MapFS{}
 
 		_, err := blogposts.NewPostsFromFS(fs)
+
+		if err == nil {
+			t.Error("expected an error but didn't get one")
+		}
+	})
+
+	t.Run("fs with no markdown files", func(t *testing.T) {
+		fs := fstest.MapFS{
+			"txt-is-not-md.txt": {Data: []byte("hello")},
+		}
+
+		posts, err := blogposts.NewPostsFromFS(fs)
+
+		if len(posts) != 0 {
+			t.Errorf("got %d posts, expected none", len(posts))
+		}
 
 		if err == nil {
 			t.Error("expected an error but didn't get one")
