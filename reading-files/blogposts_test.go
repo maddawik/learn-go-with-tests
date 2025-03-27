@@ -41,6 +41,13 @@ Enrique`
 		Body: `Hello
 World`,
 	})
+	assertPosts(t, posts[1], blogposts.Post{
+		Title:       "Post 2",
+		Description: "Description 2",
+		Tags:        []string{"rust", "borrow-checker"},
+		Body: `Hola
+Enrique`,
+	})
 }
 
 func assertPosts(t testing.TB, got blogposts.Post, want blogposts.Post) {
