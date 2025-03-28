@@ -2,6 +2,7 @@ package blogrenderer_test
 
 import (
 	"bytes"
+	"io"
 	"testing"
 
 	approvals "github.com/approvals/go-approval-tests"
@@ -25,4 +26,19 @@ func TestRender(t *testing.T) {
 
 		approvals.VerifyString(t, buf.String())
 	})
+}
+
+// FIX: `go test -bench=.` does not run this test?
+func BencharkRender(b *testing.B) {
+	aPost := blogrenderer.Post{
+		Title:       "hello world",
+		Description: "the description",
+		Body:        "the body",
+		Tags:        []string{"go", "tdd"},
+	}
+
+	b.ResetTimer()
+	for b.Loop() {
+		blogrenderer.Render(io.Discard, aPost)
+	}
 }
