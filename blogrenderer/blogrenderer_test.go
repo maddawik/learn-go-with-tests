@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"testing"
 
+	approvals "github.com/approvals/go-approval-tests"
 	"github.com/maddawik/learn-go-with-tests/blogrenderer"
 )
 
@@ -17,16 +18,11 @@ func TestRender(t *testing.T) {
 
 	t.Run("it converts a post to a single HTML", func(t *testing.T) {
 		buf := bytes.Buffer{}
-		err := blogrenderer.Render(&buf, aPost)
-		if err != nil {
+
+		if err := blogrenderer.Render(&buf, aPost); err != nil {
 			t.Fatal(err)
 		}
 
-		got := buf.String()
-		want := `<h1>Metroid Prime 4</h1><p>Metroid Prime 4 releases in 2025.</p>Tags: <ul><li>metroid</li><li>nintendo</li></ul>`
-
-		if got != want {
-			t.Errorf("got '%s' want '%s'", got, want)
-		}
+		approvals.VerifyString(t, buf.String())
 	})
 }
