@@ -20,7 +20,12 @@ func TestRender(t *testing.T) {
 	t.Run("it converts a post to a single HTML", func(t *testing.T) {
 		buf := bytes.Buffer{}
 
-		if err := blogrenderer.Render(&buf, aPost); err != nil {
+		renderer, err := blogrenderer.NewPostRenderer()
+		if err != nil {
+			return
+		}
+
+		if err := renderer.Render(&buf, aPost); err != nil {
 			t.Fatal(err)
 		}
 
@@ -37,8 +42,13 @@ func BencharkRender(b *testing.B) {
 		Tags:        []string{"go", "tdd"},
 	}
 
+	renderer, err := blogrenderer.NewPostRenderer()
+	if err != nil {
+		b.Fatal(err)
+	}
+
 	b.ResetTimer()
 	for b.Loop() {
-		blogrenderer.Render(io.Discard, aPost)
+		renderer.Render(io.Discard, aPost)
 	}
 }
