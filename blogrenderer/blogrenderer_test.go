@@ -11,8 +11,22 @@ import (
 
 func TestRender(t *testing.T) {
 	aPost := blogrenderer.Post{
-		Title:       "Metroid Prime 4",
-		Body:        "A highly anticipated sequel for Nintendo Switch",
+		Title: "Metroid Prime 4",
+		Body: `# Metroid Prime 4: Beyond
+
+This highly anticipated sequel for Nintendo Switch is coming out this year!
+
+## Gameplay
+
+Samus has psychic powers she can use to unravel the mysteries of a new planet!
+
+She'll have to:
+
+- Explore
+- Solve Puzzles
+- Fight Enemies
+
+And more!`,
 		Description: "Metroid Prime 4 releases in 2025.",
 		Tags:        []string{"metroid", "nintendo"},
 	}
@@ -20,12 +34,12 @@ func TestRender(t *testing.T) {
 	t.Run("it converts a post to a single HTML", func(t *testing.T) {
 		buf := bytes.Buffer{}
 
-		renderer, err := blogrenderer.NewPostRenderer()
+		postRenderer, err := blogrenderer.NewPostRenderer()
 		if err != nil {
 			return
 		}
 
-		if err := renderer.Render(&buf, aPost); err != nil {
+		if err := postRenderer.Render(&buf, aPost); err != nil {
 			t.Fatal(err)
 		}
 
@@ -42,13 +56,13 @@ func BencharkRender(b *testing.B) {
 		Tags:        []string{"go", "tdd"},
 	}
 
-	renderer, err := blogrenderer.NewPostRenderer()
+	postRenderer, err := blogrenderer.NewPostRenderer()
 	if err != nil {
 		b.Fatal(err)
 	}
 
 	b.ResetTimer()
 	for b.Loop() {
-		renderer.Render(io.Discard, aPost)
+		postRenderer.Render(io.Discard, aPost)
 	}
 }
