@@ -57,15 +57,8 @@ func newPostVM(p Post, r *PostRenderer) postViewModel {
 	return vm
 }
 
-func (r *PostRenderer) RenderIndex(w io.Writer, p []Post) error {
-	indexTemplate := `<ol>{{range .}}<li><a href="/post/{{.SanitisedTitle}}">{{.Title}}</a></li>{{end}}</ol>`
-
-	templ, err := template.New("index").Parse(indexTemplate)
-	if err != nil {
-		return err
-	}
-
-	if err := templ.Execute(w, p); err != nil {
+func (r *PostRenderer) RenderIndex(w io.Writer, posts []Post) error {
+	if err := r.templ.ExecuteTemplate(w, "index.gohtml", posts); err != nil {
 		return err
 	}
 	return nil
