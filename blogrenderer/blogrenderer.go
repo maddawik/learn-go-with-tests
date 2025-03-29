@@ -18,6 +18,10 @@ type Post struct {
 	Tags                     []string
 }
 
+func (p Post) SanitisedTitle() string {
+	return strings.ToLower(strings.ReplaceAll(p.Title, " ", "-"))
+}
+
 type PostRenderer struct {
 	templ    *template.Template
 	mdParser *parser.Parser
@@ -54,13 +58,9 @@ func newPostVM(p Post, r *PostRenderer) postViewModel {
 }
 
 func (r *PostRenderer) RenderIndex(w io.Writer, p []Post) error {
-	indexTemplate := `<ol>{{range .}}<li><a href="/post/{{sanitiseTitle .Title}}">{{.Title}}</a></li>{{end}}</ol>`
+	indexTemplate := `<ol>{{range .}}<li><a href="/post/{{.SanitisedTitle}}">{{.Title}}</a></li>{{end}}</ol>`
 
-	templ, err := template.New("index").Funcs(template.FuncMap{
-		"sanitiseTitle": func(title string) string {
-			return strings.ToLower(strings.ReplaceAll(title, " ", "-"))
-		},
-	}).Parse(indexTemplate)
+	templ, err := template.New("index").Parse(indexTemplate)
 	if err != nil {
 		return err
 	}
