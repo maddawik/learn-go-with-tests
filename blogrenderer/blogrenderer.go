@@ -51,3 +51,17 @@ func newPostVM(p Post, r *PostRenderer) postViewModel {
 	vm.HTMLBody = template.HTML(markdown.ToHTML([]byte(p.Body), r.mdParser, nil))
 	return vm
 }
+
+func (r *PostRenderer) RenderIndex(w io.Writer, p []Post) error {
+	indexTemplate := `<ol>{{range .}}<li><a href="/post/{{.Title}}">{{.Title}}</a></li>{{end}}</ol>`
+
+	templ, err := template.New("index").Parse(indexTemplate)
+	if err != nil {
+		return err
+	}
+
+	if err := templ.Execute(w, p); err != nil {
+		return err
+	}
+	return nil
+}
