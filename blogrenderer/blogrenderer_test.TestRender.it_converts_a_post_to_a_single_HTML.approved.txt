@@ -19,27 +19,33 @@
 </nav>
 <main>
 
+
 <h1>Metroid Prime 4</h1>
 
 <p>Metroid Prime 4 releases in 2025.</p>
 
 Tags: <ul><li>metroid</li><li>nintendo</li></ul>
 
-# Metroid Prime 4: Beyond
+<h1 id="metroid-prime-4-beyond">Metroid Prime 4: Beyond</h1>
 
-This highly anticipated sequel for Nintendo Switch is coming out this year!
+<p>This highly anticipated sequel for Nintendo Switch is coming out this year!</p>
 
-## Gameplay
+<h2 id="gameplay">Gameplay</h2>
 
-Samus has psychic powers she can use to unravel the mysteries of a new planet!
+<p>Samus has psychic powers she can use to unravel the mysteries of a new planet!</p>
 
-She&#39;ll have to:
+<p>She&rsquo;ll have to:</p>
 
-- Explore
-- Solve Puzzles
-- Fight Enemies
+<ul>
+<li>Explore</li>
+<li>Solve Puzzles</li>
+<li>Fight Enemies</li>
+</ul>
 
-And more!
+<p>And more!</p>
+
+<p>Find out more at <a href="https://nintendo.com">Nintendo</a></p>
+
 
 
 </main>

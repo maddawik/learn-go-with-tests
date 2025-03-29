@@ -10,9 +10,7 @@ import (
 )
 
 func TestRender(t *testing.T) {
-	aPost := blogrenderer.Post{
-		Title: "Metroid Prime 4",
-		Body: `# Metroid Prime 4: Beyond
+	aBody := `# Metroid Prime 4: Beyond
 
 This highly anticipated sequel for Nintendo Switch is coming out this year!
 
@@ -26,7 +24,13 @@ She'll have to:
 - Solve Puzzles
 - Fight Enemies
 
-And more!`,
+And more!
+
+Find out more at [Nintendo](https://nintendo.com)`
+
+	aPost := blogrenderer.Post{
+		Title:       "Metroid Prime 4",
+		Body:        aBody,
 		Description: "Metroid Prime 4 releases in 2025.",
 		Tags:        []string{"metroid", "nintendo"},
 	}
