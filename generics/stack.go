@@ -5,12 +5,21 @@ type StackOfInts struct {
 }
 
 func (s *StackOfInts) Push(value int) {
+	s.values = append(s.values, value)
 }
 
 func (s *StackOfInts) Pop() (int, bool) {
-	return 0, nil
+	if s.IsEmpty() {
+		return 0, false
+	}
+
+	index := len(s.values) - 1
+	result := s.values[index]
+	s.values = s.values[:index]
+
+	return result, true
 }
 
 func (s *StackOfInts) IsEmpty() bool {
-	return true
+	return len(s.values) == 0
 }
