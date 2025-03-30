@@ -11,18 +11,8 @@ func TestAssertFunctions(t *testing.T) {
 		AssertEqual(t, "hello", "hello")
 		AssertNotEqual(t, "hello", "hey")
 	})
-}
-
-func AssertEqual[T comparable](t *testing.T, got, want T) {
-	t.Helper()
-	if got != want {
-		t.Errorf("got %+v, want %+v", got, want)
-	}
-}
-
-func AssertNotEqual[T comparable](t *testing.T, got, want T) {
-	t.Helper()
-	if got == want {
-		t.Errorf("didn't want %+v", got)
-	}
+	t.Run("asserting on bools", func(t *testing.T) {
+		AssertTrue(t, true)
+		AssertFalse(t, false)
+	})
 }
