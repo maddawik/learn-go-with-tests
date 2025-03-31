@@ -77,3 +77,31 @@ func TestSumAllHeads(t *testing.T) {
 		checkSums(t, got, want)
 	})
 }
+
+func TestReduce(t *testing.T) {
+	t.Run("multiplication of all elements", func(t *testing.T) {
+		multiply := func(x, y int) int {
+			return x * y
+		}
+
+		got := Reduce([]int{1, 2, 3}, multiply, 1)
+		want := 6
+
+		if got != want {
+			t.Errorf("got %d, want %d", got, want)
+		}
+	})
+
+	t.Run("concatenation of strings", func(t *testing.T) {
+		concatenate := func(x, y string) string {
+			return x + y
+		}
+
+		got := Reduce([]string{"1", "2", "3"}, concatenate, "")
+		want := "123"
+
+		if got != want {
+			t.Errorf("got %s, want %s", got, want)
+		}
+	})
+}
