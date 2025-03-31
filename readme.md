@@ -33,3 +33,4 @@ how the solutions for each of these examples comes together.
 16. [Reading files](./reading-files/)
 17. [Templating](./blogrenderer/)
 18. [Generics](./generics/)
+19. [Arrays and Slices w/ Generics](./arrays-with-generics/)
