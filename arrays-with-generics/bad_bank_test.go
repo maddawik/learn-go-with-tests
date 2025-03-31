@@ -32,4 +32,22 @@ func TestFind(t *testing.T) {
 		AssertTrue(t, found)
 		AssertEqual(t, firstEvenNumber, 2)
 	})
+
+	t.Run("find the best musicians", func(t *testing.T) {
+		type Musician struct {
+			Name string
+		}
+		musicians := []Musician{
+			{Name: "John Coltrane"},
+			{Name: "Frank Zappa"},
+			{Name: "Sergei Rachmaninoff"},
+		}
+
+		bestMusician, found := Find(musicians, func(musician Musician) bool {
+			return musician.Name == "Frank Zappa"
+		})
+
+		AssertTrue(t, found)
+		AssertEqual(t, bestMusician.Name, "Frank Zappa")
+	})
 }
