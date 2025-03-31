@@ -25,16 +25,14 @@ func SumAllTails(numbersToSum ...[]int) []int {
 }
 
 func SumAllHeads(numbersToSum ...[]int) int {
-	var sum int
-
+	heads := []int{}
 	for _, numbers := range numbersToSum {
 		if len(numbers) == 0 {
 			continue
 		}
-		sum += numbers[0]
+		heads = append(heads, numbers[0])
 	}
-
-	return sum
+	return Sum(heads)
 }
 
 func Reduce[A any](collection []A, f func(A, A) A, initialValue A) A {
