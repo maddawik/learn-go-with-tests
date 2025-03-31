@@ -6,12 +6,10 @@ func Sum(numbers []int) int {
 }
 
 func SumAll(numbersToSum ...[]int) []int {
-	var sums []int
-	for _, numbers := range numbersToSum {
-		sums = append(sums, Sum(numbers))
+	sumAll := func(acc, x []int) []int {
+		return append(acc, Sum(x))
 	}
-
-	return sums
+	return Reduce(numbersToSum, sumAll, []int{})
 }
 
 func SumAllTails(numbersToSum ...[]int) []int {
