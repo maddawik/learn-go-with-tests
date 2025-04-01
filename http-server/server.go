@@ -25,6 +25,7 @@ func (p *PlayerServer) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 func (p *PlayerServer) processWin(w http.ResponseWriter) {
+	p.store.RecordWin("Peppy")
 	w.WriteHeader(http.StatusAccepted)
 }
 
