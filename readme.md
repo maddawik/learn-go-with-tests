@@ -13,7 +13,7 @@ I've made a concious effort to build a commit history that is granular and
 hopefully helpful to future me (and others) who want to get a clear story of
 how the solutions for each of these examples comes together.
 
-## Sections
+## Go Fundamentals
 
 1. [Hello, World](./hello-world/)
 2. [Integers](./integers/)
@@ -34,3 +34,7 @@ how the solutions for each of these examples comes together.
 17. [Templating](./blogrenderer/)
 18. [Generics](./generics/)
 19. [Arrays and Slices w/ Generics](./arrays-with-generics/)
+
+## Build an Application
+
+1. [HTTP Server](./http-server/)
