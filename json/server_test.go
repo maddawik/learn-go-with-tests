@@ -111,6 +111,9 @@ func TestLeague(t *testing.T) {
 
 		got := getLeagueFromResponse(t, response.Body)
 
+		if response.Result().Header.Get("content-type") != "application/json" {
+			t.Errorf("expection content-type to be json, got %v", response.Result().Header)
+		}
 		assertStatus(t, response.Code, http.StatusOK)
 		assertLeague(t, got, wantedLeague)
 	})
