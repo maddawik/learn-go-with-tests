@@ -38,3 +38,4 @@ how the solutions for each of these examples comes together.
 ## Build an Application
 
 1. [HTTP Server](./http-server/)
+2. [JSON, routing and embedding](./json/)
