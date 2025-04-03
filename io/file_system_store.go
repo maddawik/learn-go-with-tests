@@ -17,7 +17,16 @@ func (f *FileSystemPlayerStore) GetLeague() []Player {
 }
 
 func (f *FileSystemPlayerStore) GetPlayerScore(name string) int {
-	return 0
+	var wins int
+
+	for _, v := range f.GetLeague() {
+		if v.Name == name {
+			wins = v.Wins
+			break
+		}
+	}
+
+	return wins
 }
 
 func NewLeague(rdr io.Reader) ([]Player, error) {
