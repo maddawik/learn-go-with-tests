@@ -29,6 +29,9 @@ func (f *FileSystemPlayerStore) GetPlayerScore(name string) int {
 	return wins
 }
 
+func (f *FileSystemPlayerStore) RecordWin(name string) {
+}
+
 func NewLeague(rdr io.Reader) ([]Player, error) {
 	var league []Player
 	err := json.NewDecoder(rdr).Decode(&league)
