@@ -17,8 +17,8 @@ func TestFileSystemStore(t *testing.T) {
 		assertNoError(t, err)
 
 		want := []Player{
-			{Name: "Fox", Wins: 10},
 			{Name: "Falco", Wins: 33},
+			{Name: "Fox", Wins: 10},
 		}
 
 		got := store.GetLeague()
