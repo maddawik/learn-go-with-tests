@@ -17,27 +17,17 @@ func (f *FileSystemPlayerStore) GetLeague() League {
 }
 
 func (f *FileSystemPlayerStore) GetPlayerScore(name string) int {
-	var wins int
-
-	for _, v := range f.GetLeague() {
-		if v.Name == name {
-			wins = v.Wins
-			break
-		}
+	player := f.GetLeague().Find(name)
+	if player != nil {
+		return player.Wins
 	}
-
-	return wins
+	return 0
 }
 
 func (f *FileSystemPlayerStore) RecordWin(name string) {
 	league := f.GetLeague()
 
-	for i, player := range league {
-		if player.Name == name {
-			league[i].Wins++
-			break
-		}
-	}
+	league.Find(name).Wins++
 
 	f.database.Seek(0, io.SeekStart)
 	json.NewEncoder(f.database).Encode(league)
