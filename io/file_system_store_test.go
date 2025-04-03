@@ -40,6 +40,24 @@ func TestFileSystemStore(t *testing.T) {
 
 		assertPlayerScore(t, got, want)
 	})
+
+	t.Run("store wins for existing players", func(t *testing.T) {
+		database, cleanDatabase := createTempFile(t, `[
+			{"Name": "Jimmy", "Wins": 2},
+			{"Name": "Jimbo", "Wins": 4}]`)
+		defer cleanDatabase()
+
+		store := FileSystemPlayerStore{database}
+
+		player := "Jimbo"
+
+		store.RecordWin(player)
+
+		got := store.GetPlayerScore(player)
+		want := 5
+
+		assertPlayerScore(t, got, want)
+	})
 }
 
 func createTempFile(t testing.TB, initialData string) (io.ReadWriteSeeker, func()) {
