@@ -10,7 +10,7 @@ type FileSystemPlayerStore struct {
 	database io.ReadWriteSeeker
 }
 
-func (f *FileSystemPlayerStore) GetLeague() []Player {
+func (f *FileSystemPlayerStore) GetLeague() League {
 	f.database.Seek(0, io.SeekStart)
 	league, _ := NewLeague(f.database)
 	return league
@@ -43,8 +43,8 @@ func (f *FileSystemPlayerStore) RecordWin(name string) {
 	json.NewEncoder(f.database).Encode(league)
 }
 
-func NewLeague(rdr io.Reader) ([]Player, error) {
-	var league []Player
+func NewLeague(rdr io.Reader) (League, error) {
+	var league League
 	err := json.NewDecoder(rdr).Decode(&league)
 	if err != nil {
 		err = fmt.Errorf("problem parsing league, %v", err)
