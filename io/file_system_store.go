@@ -16,6 +16,10 @@ func (f *FileSystemPlayerStore) GetLeague() []Player {
 	return league
 }
 
+func (f *FileSystemPlayerStore) GetPlayerScore(name string) int {
+	return 0
+}
+
 func NewLeague(rdr io.Reader) ([]Player, error) {
 	var league []Player
 	err := json.NewDecoder(rdr).Decode(&league)
