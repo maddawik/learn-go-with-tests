@@ -1,6 +1,7 @@
 package poker_test
 
 import (
+	"bytes"
 	"fmt"
 	"strings"
 	"testing"
@@ -27,12 +28,16 @@ func (s *SpyBlindAlerter) ScheduleAlertAt(duration time.Duration, amount int) {
 }
 
 func TestCLI(t *testing.T) {
+	dummyBlindAlerter := &SpyBlindAlerter{}
+	dummyPlayerStore := &poker.StubPlayerStore{}
+	dummyStdIn := &bytes.Buffer{}
+	dummyStdOut := &bytes.Buffer{}
 	t.Run("record May win from user input", func(t *testing.T) {
 		in := strings.NewReader("May wins\n")
 		playerStore := &poker.StubPlayerStore{}
 		dummySpyAlerter := &SpyBlindAlerter{}
 
-		cli := poker.NewCLI(playerStore, in, dummySpyAlerter)
+		cli := poker.NewCLI(playerStore, in, dummyStdOut, dummySpyAlerter)
 		cli.PlayPoker()
 
 		poker.AssertPlayerWin(t, playerStore, "May")
@@ -43,7 +48,7 @@ func TestCLI(t *testing.T) {
 		playerStore := &poker.StubPlayerStore{}
 		dummySpyAlerter := &SpyBlindAlerter{}
 
-		cli := poker.NewCLI(playerStore, in, dummySpyAlerter)
+		cli := poker.NewCLI(playerStore, in, dummyStdOut, dummySpyAlerter)
 		cli.PlayPoker()
 
 		poker.AssertPlayerWin(t, playerStore, "Cody")
@@ -54,7 +59,7 @@ func TestCLI(t *testing.T) {
 		playerStore := &poker.StubPlayerStore{}
 		blindAlerter := &SpyBlindAlerter{}
 
-		cli := poker.NewCLI(playerStore, in, blindAlerter)
+		cli := poker.NewCLI(playerStore, in, dummyStdOut, blindAlerter)
 		cli.PlayPoker()
 
 		cases := []scheduledAlert{
