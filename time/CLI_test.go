@@ -26,8 +26,9 @@ func TestCLI(t *testing.T) {
 	t.Run("record May win from user input", func(t *testing.T) {
 		in := strings.NewReader("May wins\n")
 		playerStore := &poker.StubPlayerStore{}
+		dummySpyAlerter := &SpyBlindAlerter{}
 
-		cli := poker.NewCLI(playerStore, in)
+		cli := poker.NewCLI(playerStore, in, dummySpyAlerter)
 		cli.PlayPoker()
 
 		poker.AssertPlayerWin(t, playerStore, "May")
@@ -36,8 +37,9 @@ func TestCLI(t *testing.T) {
 	t.Run("record Cody win from user input", func(t *testing.T) {
 		in := strings.NewReader("Cody wins\n")
 		playerStore := &poker.StubPlayerStore{}
+		dummySpyAlerter := &SpyBlindAlerter{}
 
-		cli := poker.NewCLI(playerStore, in)
+		cli := poker.NewCLI(playerStore, in, dummySpyAlerter)
 		cli.PlayPoker()
 
 		poker.AssertPlayerWin(t, playerStore, "Cody")

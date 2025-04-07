@@ -12,7 +12,11 @@ type CLI struct {
 	in          *bufio.Scanner
 }
 
-func NewCLI(store PlayerStore, in io.Reader) *CLI {
+type BlindAlerter interface {
+	ScheduleAlertAt(time.Duration, int)
+}
+
+func NewCLI(store PlayerStore, in io.Reader, alerter BlindAlerter) *CLI {
 	return &CLI{
 		playerStore: store,
 		in:          bufio.NewScanner(in),
