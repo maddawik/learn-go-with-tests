@@ -3,9 +3,24 @@ package poker_test
 import (
 	"strings"
 	"testing"
+	"time"
 
 	poker "github.com/maddawik/learn-go-with-tests/time"
 )
+
+type SpyBlindAlerter struct {
+	alerts []struct {
+		scheduleAt time.Duration
+		amount     int
+	}
+}
+
+func (s *SpyBlindAlerter) ScheduleAlertAt(duration time.Duration, amount int) {
+	s.alerts = append(s.alerts, struct {
+		scheduleAt time.Duration
+		amount     int
+	}{duration, amount})
+}
 
 func TestCLI(t *testing.T) {
 	t.Run("record May win from user input", func(t *testing.T) {
