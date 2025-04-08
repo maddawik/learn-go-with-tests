@@ -41,3 +41,4 @@ how the solutions for each of these examples comes together.
 2. [JSON, routing and embedding](./json/)
 3. [IO and sorting](./io/)
 4. [Command line & package structure](./command-line/)
+5. [Time](./time/)
