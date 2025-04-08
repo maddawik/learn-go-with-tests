@@ -37,11 +37,7 @@ func TestFileSystemStore(t *testing.T) {
 		store, err := NewFileSystemPlayerStore(database)
 
 		AssertNoError(t, err)
-
-		got := store.GetPlayerScore("Fox")
-		want := 10
-
-		AssertPlayerScore(t, got, want)
+		AssertPlayerScore(t, store.GetPlayerScore("Fox"), 10)
 	})
 
 	t.Run("store wins for existing players", func(t *testing.T) {
@@ -55,13 +51,9 @@ func TestFileSystemStore(t *testing.T) {
 		AssertNoError(t, err)
 
 		player := "Jimbo"
-
 		store.RecordWin(player)
 
-		got := store.GetPlayerScore(player)
-		want := 5
-
-		AssertPlayerScore(t, got, want)
+		AssertPlayerScore(t, store.GetPlayerScore(player), 5)
 	})
 
 	t.Run("store wins for new players", func(t *testing.T) {
@@ -75,12 +67,9 @@ func TestFileSystemStore(t *testing.T) {
 		AssertNoError(t, err)
 
 		player := "Tifa"
-
 		store.RecordWin(player)
 
-		got := store.GetPlayerScore(player)
-		want := 1
-		AssertPlayerScore(t, got, want)
+		AssertPlayerScore(t, store.GetPlayerScore(player), 1)
 	})
 
 	t.Run("works with an empty file", func(t *testing.T) {
@@ -132,20 +121,4 @@ func CreateTempFile(t testing.TB, initialData string) (*os.File, func()) {
 	}
 
 	return tmpfile, removeFile
-}
-
-func AssertPlayerScore(t testing.TB, got, want int) {
-	t.Helper()
-
-	if got != want {
-		t.Errorf("got %d, want %d", got, want)
-	}
-}
-
-func AssertNoError(t testing.TB, err error) {
-	t.Helper()
-
-	if err != nil {
-		t.Errorf("didn't expect an error but got one, %v", err)
-	}
 }

@@ -60,21 +60,9 @@ func TestGame_Start(t *testing.T) {
 		cli := poker.NewCLI(in, out, game)
 		cli.PlayPoker()
 
-		if game.StartCalled {
-			t.Error("game should not have started")
-		}
-
-		assertMessagesSentToUser(t, out, poker.PlayerPrompt, poker.BadPlayerInputErrMsg)
+		poker.AssertGameNotStarted(t, game.StartCalled)
+		poker.AssertMessagesSentToUser(t, out, poker.PlayerPrompt, poker.BadPlayerInputErrMsg)
 	})
-}
-
-func assertMessagesSentToUser(t testing.TB, stdout *bytes.Buffer, messages ...string) {
-	t.Helper()
-	want := strings.Join(messages, "")
-	got := stdout.String()
-	if got != want {
-		t.Errorf("got %q sent to stdout but expected %+v", want, messages)
-	}
 }
 
 func TestGame_Finish(t *testing.T) {
@@ -82,7 +70,6 @@ func TestGame_Finish(t *testing.T) {
 	store := &poker.StubPlayerStore{}
 	game := poker.NewTexasHoldem(dummyBlindAlerter, store)
 	winner := "Kayla"
-
 	game.Finish(winner)
 
 	poker.AssertPlayerWin(t, store, winner)
@@ -100,5 +87,19 @@ func checkSchedulingCases(t *testing.T, cases []poker.ScheduledAlert, blindAlert
 			got := blindAlerter.Alerts[i]
 			assertScheduledAlert(t, got, want)
 		})
+	}
+}
+
+func assertScheduledAlert(t testing.TB, got, want poker.ScheduledAlert) {
+	t.Helper()
+
+	amountGot := got.Amount
+	if amountGot != want.Amount {
+		t.Errorf("got amount %d, want %d", amountGot, want.Amount)
+	}
+
+	gotScheduledTime := got.At
+	if gotScheduledTime != want.At {
+		t.Errorf("got time %v, want %v", gotScheduledTime, want.At)
 	}
 }
