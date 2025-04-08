@@ -29,6 +29,7 @@ func (cli *CLI) PlayPoker() {
 
 	numberOfPlayers, err := strconv.Atoi(cli.readLine())
 	if err != nil {
+		fmt.Fprint(cli.out, " yipeekiya mothatrucka")
 		return
 	}
 
