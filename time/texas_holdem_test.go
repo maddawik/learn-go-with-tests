@@ -63,6 +63,13 @@ func TestGame_Start(t *testing.T) {
 		if game.StartCalled {
 			t.Error("game should not have started")
 		}
+
+		got := out.String()
+		want := poker.PlayerPrompt + " yipeekiya mothatrucka"
+
+		if got != want {
+			t.Errorf("got %q, want %q", got, want)
+		}
 	})
 }
 
