@@ -107,7 +107,7 @@ func AssertMessagesSentToUser(t testing.TB, stdout *bytes.Buffer, messages ...st
 	want := strings.Join(messages, "")
 	got := stdout.String()
 	if got != want {
-		t.Errorf("got %q sent to stdout but expected %+v", want, messages)
+		t.Errorf("got %q sent to stdout but expected %+v", got, messages)
 	}
 }
 
