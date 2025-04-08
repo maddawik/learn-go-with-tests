@@ -10,23 +10,6 @@ import (
 	poker "github.com/maddawik/learn-go-with-tests/time"
 )
 
-type scheduledAlert struct {
-	at     time.Duration
-	amount int
-}
-
-func (s scheduledAlert) String() string {
-	return fmt.Sprintf("%d chips at %v", s.amount, s.at)
-}
-
-type SpyBlindAlerter struct {
-	alerts []scheduledAlert
-}
-
-func (s *SpyBlindAlerter) ScheduleAlertAt(duration time.Duration, amount int) {
-	s.alerts = append(s.alerts, scheduledAlert{duration, amount})
-}
-
 func TestCLI(t *testing.T) {
 	dummyPlayerStore := &poker.StubPlayerStore{}
 	dummyStdOut := &bytes.Buffer{}
@@ -34,7 +17,7 @@ func TestCLI(t *testing.T) {
 	t.Run("record May win from user input", func(t *testing.T) {
 		in := strings.NewReader("5\nMay wins\n")
 		playerStore := &poker.StubPlayerStore{}
-		dummySpyAlerter := &SpyBlindAlerter{}
+		dummySpyAlerter := &poker.SpyBlindAlerter{}
 		game := poker.NewGame(dummySpyAlerter, playerStore)
 
 		cli := poker.NewCLI(in, dummyStdOut, game)
@@ -46,7 +29,7 @@ func TestCLI(t *testing.T) {
 	t.Run("record Cody win from user input", func(t *testing.T) {
 		in := strings.NewReader("5\nCody wins\n")
 		playerStore := &poker.StubPlayerStore{}
-		dummySpyAlerter := &SpyBlindAlerter{}
+		dummySpyAlerter := &poker.SpyBlindAlerter{}
 
 		game := poker.NewGame(dummySpyAlerter, playerStore)
 
@@ -59,14 +42,14 @@ func TestCLI(t *testing.T) {
 	t.Run("it schedules printing of blind values", func(t *testing.T) {
 		in := strings.NewReader("5\nJames wins\n")
 		playerStore := &poker.StubPlayerStore{}
-		blindAlerter := &SpyBlindAlerter{}
+		blindAlerter := &poker.SpyBlindAlerter{}
 
 		game := poker.NewGame(blindAlerter, playerStore)
 
 		cli := poker.NewCLI(in, dummyStdOut, game)
 		cli.PlayPoker()
 
-		cases := []scheduledAlert{
+		cases := []poker.ScheduledAlert{
 			{0 * time.Second, 100},
 			{10 * time.Minute, 200},
 			{20 * time.Minute, 300},
@@ -82,11 +65,11 @@ func TestCLI(t *testing.T) {
 
 		for i, want := range cases {
 			t.Run(fmt.Sprint(want), func(t *testing.T) {
-				if len(blindAlerter.alerts) <= i {
-					t.Fatalf("alert %d was not scheduled %v", i, blindAlerter.alerts)
+				if len(blindAlerter.Alerts) <= i {
+					t.Fatalf("alert %d was not scheduled %v", i, blindAlerter.Alerts)
 				}
 
-				got := blindAlerter.alerts[i]
+				got := blindAlerter.Alerts[i]
 				assertScheduledAlert(t, got, want)
 			})
 		}
@@ -95,7 +78,7 @@ func TestCLI(t *testing.T) {
 	t.Run("it prompts the user to enter the number of players", func(t *testing.T) {
 		stdout := &bytes.Buffer{}
 		in := strings.NewReader("7\n")
-		blindAlerter := &SpyBlindAlerter{}
+		blindAlerter := &poker.SpyBlindAlerter{}
 
 		game := poker.NewGame(blindAlerter, dummyPlayerStore)
 
@@ -109,7 +92,7 @@ func TestCLI(t *testing.T) {
 			t.Errorf("got %q, want %q", got, want)
 		}
 
-		cases := []scheduledAlert{
+		cases := []poker.ScheduledAlert{
 			{0 * time.Second, 100},
 			{12 * time.Minute, 200},
 			{24 * time.Minute, 300},
@@ -118,27 +101,27 @@ func TestCLI(t *testing.T) {
 
 		for i, want := range cases {
 			t.Run(fmt.Sprint(want), func(t *testing.T) {
-				if len(blindAlerter.alerts) <= 1 {
-					t.Fatalf("alert %d was not scheduled %v", i, blindAlerter.alerts)
+				if len(blindAlerter.Alerts) <= 1 {
+					t.Fatalf("alert %d was not scheduled %v", i, blindAlerter.Alerts)
 				}
 
-				got := blindAlerter.alerts[i]
+				got := blindAlerter.Alerts[i]
 				assertScheduledAlert(t, got, want)
 			})
 		}
 	})
 }
 
-func assertScheduledAlert(t testing.TB, got, want scheduledAlert) {
+func assertScheduledAlert(t testing.TB, got, want poker.ScheduledAlert) {
 	t.Helper()
 
-	amountGot := got.amount
-	if amountGot != want.amount {
-		t.Errorf("got amount %d, want %d", amountGot, want.amount)
+	amountGot := got.Amount
+	if amountGot != want.Amount {
+		t.Errorf("got amount %d, want %d", amountGot, want.Amount)
 	}
 
-	gotScheduledTime := got.at
-	if gotScheduledTime != want.at {
-		t.Errorf("got time %v, want %v", gotScheduledTime, want.at)
+	gotScheduledTime := got.At
+	if gotScheduledTime != want.At {
+		t.Errorf("got time %v, want %v", gotScheduledTime, want.At)
 	}
 }
