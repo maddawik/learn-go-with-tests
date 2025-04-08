@@ -111,3 +111,16 @@ type ScheduledAlert struct {
 func (s ScheduledAlert) String() string {
 	return fmt.Sprintf("%d chips at %v", s.Amount, s.At)
 }
+
+type GameSpy struct {
+	StartedWith  int
+	FinishedWith string
+}
+
+func (g *GameSpy) Play(numberOfPlayers int) {
+	g.StartedWith = numberOfPlayers
+}
+
+func (g *GameSpy) Finish(winner string) {
+	g.FinishedWith = winner
+}
