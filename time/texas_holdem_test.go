@@ -1,7 +1,9 @@
 package poker_test
 
 import (
+	"bytes"
 	"fmt"
+	"strings"
 	"testing"
 	"time"
 
@@ -48,6 +50,19 @@ func TestGame_Start(t *testing.T) {
 		}
 
 		checkSchedulingCases(t, cases, blindAlerter)
+	})
+
+	t.Run("it prints an error when a non numeric value is entered and does not start the game", func(t *testing.T) {
+		out := &bytes.Buffer{}
+		in := strings.NewReader("Berries\n")
+		game := &poker.GameSpy{}
+
+		cli := poker.NewCLI(in, out, game)
+		cli.PlayPoker()
+
+		if game.StartCalled {
+			t.Error("game should not have started")
+		}
 	})
 }
 

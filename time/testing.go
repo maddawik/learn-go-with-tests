@@ -113,14 +113,19 @@ func (s ScheduledAlert) String() string {
 }
 
 type GameSpy struct {
-	StartedWith  int
-	FinishedWith string
+	StartCalled bool
+	StartedWith int
+
+	FinishedWith   string
+	FinishedCalled bool
 }
 
 func (g *GameSpy) Play(numberOfPlayers int) {
+	g.StartCalled = true
 	g.StartedWith = numberOfPlayers
 }
 
 func (g *GameSpy) Finish(winner string) {
+	g.FinishedCalled = true
 	g.FinishedWith = winner
 }
