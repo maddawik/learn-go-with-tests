@@ -64,13 +64,17 @@ func TestGame_Start(t *testing.T) {
 			t.Error("game should not have started")
 		}
 
-		got := out.String()
-		want := poker.PlayerPrompt + " yipeekiya mothatrucka"
-
-		if got != want {
-			t.Errorf("got %q, want %q", got, want)
-		}
+		assertMessagesSentToUser(t, out, poker.PlayerPrompt, poker.BadPlayerInputErrMsg)
 	})
+}
+
+func assertMessagesSentToUser(t testing.TB, stdout *bytes.Buffer, messages ...string) {
+	t.Helper()
+	want := strings.Join(messages, "")
+	got := stdout.String()
+	if got != want {
+		t.Errorf("got %q sent to stdout but expected %+v", want, messages)
+	}
 }
 
 func TestGame_Finish(t *testing.T) {

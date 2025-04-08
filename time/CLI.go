@@ -14,7 +14,10 @@ type CLI struct {
 	game Game
 }
 
-const PlayerPrompt = "Please enter the number of players:"
+const (
+	PlayerPrompt         = "Please enter the number of players:"
+	BadPlayerInputErrMsg = "Bad value receieved for number of players, please try again with a number"
+)
 
 func NewCLI(in io.Reader, out io.Writer, game Game) *CLI {
 	return &CLI{
@@ -29,7 +32,7 @@ func (cli *CLI) PlayPoker() {
 
 	numberOfPlayers, err := strconv.Atoi(cli.readLine())
 	if err != nil {
-		fmt.Fprint(cli.out, " yipeekiya mothatrucka")
+		fmt.Fprint(cli.out, BadPlayerInputErrMsg)
 		return
 	}
 
