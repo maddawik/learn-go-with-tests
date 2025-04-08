@@ -66,13 +66,46 @@ func TestGame_Start(t *testing.T) {
 }
 
 func TestGame_Finish(t *testing.T) {
-	dummyBlindAlerter := &poker.SpyBlindAlerter{}
-	store := &poker.StubPlayerStore{}
-	game := poker.NewTexasHoldem(dummyBlindAlerter, store)
-	winner := "Kayla"
-	game.Finish(winner)
+	t.Run("saves a win by Kayla for valid input", func(t *testing.T) {
+		dummyBlindAlerter := &poker.SpyBlindAlerter{}
+		store := &poker.StubPlayerStore{}
+		game := poker.NewTexasHoldem(dummyBlindAlerter, store)
+		winner := "Kayla"
+		game.Finish(winner)
 
-	poker.AssertPlayerWin(t, store, winner)
+		poker.AssertPlayerWin(t, store, winner)
+	})
+
+	t.Run("it throws an error for not sending exactly 2 words in input", func(t *testing.T) {
+		// 1 token in input
+		out := &bytes.Buffer{}
+		in := strings.NewReader("5\nBananas\n")
+		game := &poker.GameSpy{}
+
+		cli := poker.NewCLI(in, out, game)
+		cli.PlayPoker()
+
+		poker.AssertMessagesSentToUser(t, out, poker.PlayerPrompt, poker.BadWinnerInputErrMsg)
+
+		// 3 tokens in input
+		out.Reset()
+		in = strings.NewReader("5\nApples and Grapes\n")
+		cli = poker.NewCLI(in, out, game)
+		cli.PlayPoker()
+
+		poker.AssertMessagesSentToUser(t, out, poker.PlayerPrompt, poker.BadWinnerInputErrMsg)
+	})
+
+	t.Run("it throws an error when input is not in the form `playername wins`", func(t *testing.T) {
+		out := &bytes.Buffer{}
+		in := strings.NewReader("5\nBananas lose\n")
+		game := &poker.GameSpy{}
+
+		cli := poker.NewCLI(in, out, game)
+		cli.PlayPoker()
+
+		poker.AssertMessagesSentToUser(t, out, poker.PlayerPrompt, poker.BadWinnerInputErrMsg)
+	})
 }
 
 func checkSchedulingCases(t *testing.T, cases []poker.ScheduledAlert, blindAlerter *poker.SpyBlindAlerter) {
