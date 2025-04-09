@@ -90,6 +90,19 @@ func TestLeague(t *testing.T) {
 	})
 }
 
+func TestGame(t *testing.T) {
+	t.Run("GET /game returns 200", func(t *testing.T) {
+		server := NewPlayerServer(&StubPlayerStore{})
+
+		request, _ := http.NewRequest(http.MethodGet, "/game", nil)
+		response := httptest.NewRecorder()
+
+		server.ServeHTTP(response, request)
+
+		AssertStatus(t, response.Code, http.StatusOK)
+	})
+}
+
 func NewLeagueRequest() *http.Request {
 	request, _ := http.NewRequest(http.MethodGet, "/league", nil)
 	return request
