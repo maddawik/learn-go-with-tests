@@ -24,7 +24,7 @@ func TestGETPlayers(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		AssertStatus(t, response.Code, http.StatusOK)
+		assertStatus(t, response, http.StatusOK)
 		AssertResponseBody(t, response.Body.String(), "20")
 	})
 
@@ -34,7 +34,7 @@ func TestGETPlayers(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		AssertStatus(t, response.Code, http.StatusOK)
+		assertStatus(t, response, http.StatusOK)
 		AssertResponseBody(t, response.Body.String(), "10")
 	})
 
@@ -44,7 +44,7 @@ func TestGETPlayers(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		AssertStatus(t, response.Code, http.StatusNotFound)
+		assertStatus(t, response, http.StatusNotFound)
 	})
 }
 
@@ -62,7 +62,7 @@ func TestStoreWins(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		AssertStatus(t, response.Code, http.StatusAccepted)
+		assertStatus(t, response, http.StatusAccepted)
 		AssertPlayerWin(t, store, player)
 	})
 }
@@ -85,7 +85,7 @@ func TestLeague(t *testing.T) {
 		got := GetLeagueFromResponse(t, response.Body)
 
 		AssertContentType(t, response, "application/json")
-		AssertStatus(t, response.Code, http.StatusOK)
+		assertStatus(t, response, http.StatusOK)
 		AssertLeague(t, got, wantedLeague)
 	})
 }
@@ -99,8 +99,15 @@ func TestGame(t *testing.T) {
 
 		server.ServeHTTP(response, request)
 
-		AssertStatus(t, response.Code, http.StatusOK)
+		assertStatus(t, response, http.StatusOK)
 	})
+}
+
+func assertStatus(t testing.TB, got *httptest.ResponseRecorder, want int) {
+	t.Helper()
+	if got.Code != want {
+		t.Errorf("didn't get correct status, got %d want %d", got.Code, want)
+	}
 }
 
 func NewGameRequest() *http.Request {
@@ -134,13 +141,6 @@ func AssertContentType(t testing.TB, response *httptest.ResponseRecorder, want s
 	t.Helper()
 	if response.Result().Header.Get("content-type") != want {
 		t.Errorf("response didn't have content-type of %s, %v", response.Result().Header, want)
-	}
-}
-
-func AssertStatus(t testing.TB, got, want int) {
-	t.Helper()
-	if got != want {
-		t.Errorf("didn't get correct status, got %d want %d", got, want)
 	}
 }
 
