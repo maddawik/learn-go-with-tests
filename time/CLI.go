@@ -17,6 +17,7 @@ type CLI struct {
 const (
 	PlayerPrompt         = "Please enter the number of players:"
 	BadPlayerInputErrMsg = "Bad value receieved for number of players, please try again with a number"
+	BadWinnerInputErrMsg = "Bad value receieved for winner, please try again with the format: `{PlayerName} wins`"
 )
 
 func NewCLI(in io.Reader, out io.Writer, game Game) *CLI {
@@ -37,12 +38,27 @@ func (cli *CLI) PlayPoker() {
 	}
 
 	cli.game.Play(numberOfPlayers)
-	userInput := cli.readLine()
-	cli.game.Finish(extractWinner(userInput))
+	winner, err := extractWinner(cli.readLine())
+	if err != nil {
+		fmt.Fprint(cli.out, BadWinnerInputErrMsg)
+		return
+	}
+
+	cli.game.Finish(winner)
 }
 
-func extractWinner(userInput string) string {
-	return strings.Replace(userInput, " wins", "", 1)
+func extractWinner(userInput string) (string, error) {
+	userInputSlice := strings.Split(userInput, " ")
+
+	if len(userInputSlice) != 2 {
+		return "", fmt.Errorf("wrong number of tokens for winner input, %v", BadWinnerInputErrMsg)
+	}
+
+	if userInputSlice[1] != "wins" {
+		return "", fmt.Errorf("must use `wins` for second token in winner input, %v", BadWinnerInputErrMsg)
+	}
+
+	return userInputSlice[0], nil
 }
 
 func (cli *CLI) readLine() string {
