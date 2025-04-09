@@ -3,6 +3,7 @@ package poker
 import (
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"net/http"
 	"strings"
 )
@@ -39,7 +40,12 @@ func NewPlayerServer(store PlayerStore) *PlayerServer {
 }
 
 func (p *PlayerServer) gameHandler(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusOK)
+	templ, err := template.ParseFiles("game.html")
+	if err != nil {
+		http.Error(w, fmt.Sprintf("error loading template, %v", err.Error()), http.StatusInternalServerError)
+		return
+	}
+	templ.Execute(w, nil)
 }
 
 func (p *PlayerServer) leagueHandler(w http.ResponseWriter, r *http.Request) {
