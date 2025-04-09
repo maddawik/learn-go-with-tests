@@ -6,6 +6,8 @@ import (
 	"html/template"
 	"net/http"
 	"strings"
+
+	"github.com/gorilla/websocket"
 )
 
 type Player struct {
@@ -33,10 +35,19 @@ func NewPlayerServer(store PlayerStore) *PlayerServer {
 	router.Handle("/league", http.HandlerFunc(p.leagueHandler))
 	router.Handle("/game", http.HandlerFunc(p.gameHandler))
 	router.Handle("/players/", http.HandlerFunc(p.playerHandler))
+	router.Handle("/ws", http.HandlerFunc(p.webSocket))
 
 	p.Handler = router
 
 	return p
+}
+
+func (p *PlayerServer) webSocket(w http.ResponseWriter, r *http.Request) {
+	upgrader := websocket.Upgrader{
+		ReadBufferSize:  1024,
+		WriteBufferSize: 1024,
+	}
+	upgrader.Upgrade(w, r, nil)
 }
 
 func (p *PlayerServer) gameHandler(w http.ResponseWriter, r *http.Request) {
