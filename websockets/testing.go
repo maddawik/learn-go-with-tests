@@ -65,7 +65,7 @@ type GameSpy struct {
 	FinishedCalled bool
 }
 
-func (g *GameSpy) Play(numberOfPlayers int) {
+func (g *GameSpy) Play(numberOfPlayers int, to io.Writer) {
 	g.StartCalled = true
 	g.StartedWith = numberOfPlayers
 }
