@@ -111,19 +111,26 @@ func TestGame(t *testing.T) {
 		defer server.Close()
 
 		wsURL := "ws" + strings.TrimPrefix(server.URL, "http") + "/ws"
-
-		ws, _, err := websocket.DefaultDialer.Dial(wsURL, nil)
-		if err != nil {
-			t.Fatalf("could not open a ws conntection on %s %v", wsURL, err)
-		}
-		defer ws.Close()
-
-		if err := ws.WriteMessage(websocket.TextMessage, []byte(winner)); err != nil {
-			t.Fatalf("could not second message over ws connection %v", err)
-		}
+		ws := mustDialWS(t, wsURL)
+		writeWSMessage(t, ws, winner)
 
 		AssertPlayerWin(t, store, winner)
 	})
+}
+
+func writeWSMessage(t *testing.T, ws *websocket.Conn, message string) {
+	err := ws.WriteMessage(websocket.TextMessage, []byte(message))
+	if err != nil {
+		t.Fatalf("could not second message over ws connection %v", err)
+	}
+}
+
+func mustDialWS(t *testing.T, url string) *websocket.Conn {
+	ws, _, err := websocket.DefaultDialer.Dial(url, nil)
+	if err != nil {
+		t.Fatalf("could not open a ws conntection on %s %v", url, err)
+	}
+	return ws
 }
 
 func assertStatus(t testing.TB, got *httptest.ResponseRecorder, want int) {
