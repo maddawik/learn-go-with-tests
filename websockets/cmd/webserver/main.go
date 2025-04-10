@@ -16,6 +16,10 @@ func main() {
 	}
 	defer close()
 
-	server := poker.NewPlayerServer(store)
+	server, err := poker.NewPlayerServer(store)
+	if err != nil {
+		log.Fatal("problem initializing player server", err)
+	}
+
 	log.Fatal(http.ListenAndServe(":5000", server))
 }

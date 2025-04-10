@@ -20,7 +20,7 @@ func TestGETPlayers(t *testing.T) {
 		},
 		winCalls: nil,
 	}
-	server := NewPlayerServer(store)
+	server := mustMakePlayerServer(t, store)
 	t.Run("returns Fox's score", func(t *testing.T) {
 		request := NewGetScoreRequest("Fox")
 		response := httptest.NewRecorder()
@@ -56,7 +56,7 @@ func TestStoreWins(t *testing.T) {
 		scores:   map[string]int{},
 		winCalls: []string{},
 	}
-	server := NewPlayerServer(store)
+	server := mustMakePlayerServer(t, store)
 	t.Run("it returns accepted on POST", func(t *testing.T) {
 		player := "Fox"
 
@@ -78,7 +78,7 @@ func TestLeague(t *testing.T) {
 		}
 
 		store := &StubPlayerStore{league: wantedLeague}
-		server := NewPlayerServer(store)
+		server := mustMakePlayerServer(t, store)
 
 		request := NewLeagueRequest()
 		response := httptest.NewRecorder()
@@ -95,7 +95,7 @@ func TestLeague(t *testing.T) {
 
 func TestGame(t *testing.T) {
 	t.Run("GET /game returns 200", func(t *testing.T) {
-		server := NewPlayerServer(&StubPlayerStore{})
+		server := mustMakePlayerServer(t, &StubPlayerStore{})
 
 		request := NewGameRequest()
 		response := httptest.NewRecorder()
@@ -107,7 +107,7 @@ func TestGame(t *testing.T) {
 	t.Run("when we get a message over a websocket it is a winner of a game", func(t *testing.T) {
 		store := &StubPlayerStore{}
 		winner := "Kayla"
-		server := httptest.NewServer(NewPlayerServer(store))
+		server := httptest.NewServer(mustMakePlayerServer(t, store))
 		defer server.Close()
 
 		wsURL := "ws" + strings.TrimPrefix(server.URL, "http") + "/ws"
@@ -183,4 +183,12 @@ func GetLeagueFromResponse(t testing.TB, body io.Reader) []Player {
 	}
 
 	return league
+}
+
+func mustMakePlayerServer(t *testing.T, store PlayerStore) *PlayerServer {
+	server, err := NewPlayerServer(store)
+	if err != nil {
+		t.Fatal("problem creating player server", err)
+	}
+	return server
 }

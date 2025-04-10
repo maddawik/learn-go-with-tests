@@ -29,13 +29,12 @@ type PlayerServer struct {
 
 const htmlTemplatePath = "game.html"
 
-func NewPlayerServer(store PlayerStore) *PlayerServer {
+func NewPlayerServer(store PlayerStore) (*PlayerServer, error) {
 	p := new(PlayerServer)
 
 	tmpl, err := template.ParseFiles(htmlTemplatePath)
 	if err != nil {
-		fmt.Errorf("problem opening %s %v", htmlTemplatePath, err.Error())
-		return nil
+		return nil, fmt.Errorf("problem opening %s %v", htmlTemplatePath, err.Error())
 	}
 
 	p.store = store
@@ -49,7 +48,7 @@ func NewPlayerServer(store PlayerStore) *PlayerServer {
 
 	p.Handler = router
 
-	return p
+	return p, nil
 }
 
 var wsUpgrader = websocket.Upgrader{
