@@ -8,6 +8,7 @@ import (
 	"reflect"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/gorilla/websocket"
 )
@@ -104,17 +105,22 @@ func TestGame(t *testing.T) {
 
 		assertStatus(t, response, http.StatusOK)
 	})
-	t.Run("when we get a message over a websocket it is a winner of a game", func(t *testing.T) {
-		store := &StubPlayerStore{}
-		winner := "Kayla"
-		server := httptest.NewServer(mustMakePlayerServer(t, store))
-		defer server.Close()
+	t.Run("start a game with 3 players and declare Jimbo the winner", func(t *testing.T) {
+		game := &GameSpy{}
+		dummyPlayerStore := &StubPlayerStore{}
+		winner := "Jimbo"
+		server := httptest.NewServer(mustMakePlayerServer(t, dummyPlayerStore))
+		ws := mustDialWS(t, "ws"+strings.TrimPrefix(server.URL, "http")+"/ws")
 
-		wsURL := "ws" + strings.TrimPrefix(server.URL, "http") + "/ws"
-		ws := mustDialWS(t, wsURL)
+		defer server.Close()
+		defer ws.Close()
+
+		writeWSMessage(t, ws, "3")
 		writeWSMessage(t, ws, winner)
 
-		AssertPlayerWin(t, store, winner)
+		time.Sleep(10 * time.Millisecond)
+		AssertGameStartedWith(t, 3, game.StartedWith)
+		AssertGameFinishedWith(t, winner, game.FinishedWith)
 	})
 }
 
