@@ -13,6 +13,8 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+var dummyGame = &GameSpy{}
+
 func TestGETPlayers(t *testing.T) {
 	store := &StubPlayerStore{
 		scores: map[string]int{
@@ -21,7 +23,7 @@ func TestGETPlayers(t *testing.T) {
 		},
 		winCalls: nil,
 	}
-	server := mustMakePlayerServer(t, store)
+	server := mustMakePlayerServer(t, store, dummyGame)
 	t.Run("returns Fox's score", func(t *testing.T) {
 		request := NewGetScoreRequest("Fox")
 		response := httptest.NewRecorder()
@@ -57,7 +59,7 @@ func TestStoreWins(t *testing.T) {
 		scores:   map[string]int{},
 		winCalls: []string{},
 	}
-	server := mustMakePlayerServer(t, store)
+	server := mustMakePlayerServer(t, store, dummyGame)
 	t.Run("it returns accepted on POST", func(t *testing.T) {
 		player := "Fox"
 
@@ -79,7 +81,7 @@ func TestLeague(t *testing.T) {
 		}
 
 		store := &StubPlayerStore{league: wantedLeague}
-		server := mustMakePlayerServer(t, store)
+		server := mustMakePlayerServer(t, store, dummyGame)
 
 		request := NewLeagueRequest()
 		response := httptest.NewRecorder()
@@ -96,7 +98,7 @@ func TestLeague(t *testing.T) {
 
 func TestGame(t *testing.T) {
 	t.Run("GET /game returns 200", func(t *testing.T) {
-		server := mustMakePlayerServer(t, &StubPlayerStore{})
+		server := mustMakePlayerServer(t, &StubPlayerStore{}, dummyGame)
 
 		request := NewGameRequest()
 		response := httptest.NewRecorder()
@@ -109,7 +111,7 @@ func TestGame(t *testing.T) {
 		game := &GameSpy{}
 		dummyPlayerStore := &StubPlayerStore{}
 		winner := "Jimbo"
-		server := httptest.NewServer(mustMakePlayerServer(t, dummyPlayerStore))
+		server := httptest.NewServer(mustMakePlayerServer(t, dummyPlayerStore, game))
 		ws := mustDialWS(t, "ws"+strings.TrimPrefix(server.URL, "http")+"/ws")
 
 		defer server.Close()
@@ -198,8 +200,8 @@ func GetLeagueFromResponse(t testing.TB, body io.Reader) []Player {
 	return league
 }
 
-func mustMakePlayerServer(t *testing.T, store PlayerStore) *PlayerServer {
-	server, err := NewPlayerServer(store)
+func mustMakePlayerServer(t *testing.T, store PlayerStore, game Game) *PlayerServer {
+	server, err := NewPlayerServer(store, game)
 	if err != nil {
 		t.Fatal("problem creating player server", err)
 	}
