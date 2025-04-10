@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -54,18 +55,40 @@ func NewPlayerServer(store PlayerStore, game Game) (*PlayerServer, error) {
 	return p, nil
 }
 
+type playerServerWS struct {
+	*websocket.Conn
+}
+
+func newPlayerServerWS(w http.ResponseWriter, r *http.Request) *playerServerWS {
+	conn, err := wsUpgrader.Upgrade(w, r, nil)
+	if err != nil {
+		log.Printf("problem upgrading connection to WebSockets %v", err)
+	}
+
+	return &playerServerWS{conn}
+}
+
+func (w *playerServerWS) WaitForMsg() string {
+	_, msg, err := w.ReadMessage()
+	if err != nil {
+		log.Printf("error reading from websocket %v\n", err)
+	}
+	return string(msg)
+}
+
 var wsUpgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
 }
 
 func (p *PlayerServer) webSocket(w http.ResponseWriter, r *http.Request) {
-	conn, _ := wsUpgrader.Upgrade(w, r, nil)
-	_, numberOfPlayersMsg, _ := conn.ReadMessage()
+	ws := newPlayerServerWS(w, r)
+
+	numberOfPlayersMsg := ws.WaitForMsg()
 	numberOfPlayers, _ := strconv.Atoi(string(numberOfPlayersMsg))
 	p.game.Play(numberOfPlayers, w)
 
-	_, winner, _ := conn.ReadMessage()
+	winner := ws.WaitForMsg()
 	p.game.Finish(string(winner))
 }
 
