@@ -68,6 +68,14 @@ func newPlayerServerWS(w http.ResponseWriter, r *http.Request) *playerServerWS {
 	return &playerServerWS{conn}
 }
 
+func (w *playerServerWS) Write(p []byte) (n int, err error) {
+	err = w.WriteMessage(websocket.TextMessage, p)
+	if err != nil {
+		return 0, err
+	}
+	return len(p), nil
+}
+
 func (w *playerServerWS) WaitForMsg() string {
 	_, msg, err := w.ReadMessage()
 	if err != nil {
@@ -86,7 +94,7 @@ func (p *PlayerServer) webSocket(w http.ResponseWriter, r *http.Request) {
 
 	numberOfPlayersMsg := ws.WaitForMsg()
 	numberOfPlayers, _ := strconv.Atoi(string(numberOfPlayersMsg))
-	p.game.Play(numberOfPlayers, w)
+	p.game.Play(numberOfPlayers, ws)
 
 	winner := ws.WaitForMsg()
 	p.game.Finish(string(winner))
