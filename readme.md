@@ -42,3 +42,4 @@ how the solutions for each of these examples comes together.
 3. [IO and sorting](./io/)
 4. [Command line & package structure](./command-line/)
 5. [Time](./time/)
+5. [Websockets](./websockets/)
