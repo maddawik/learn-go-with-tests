@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"strings"
+	"sync"
 	"testing"
 	"time"
 )
@@ -58,6 +59,8 @@ func (s ScheduledAlert) String() string {
 }
 
 type GameSpy struct {
+	mu sync.Mutex
+
 	StartCalled bool
 	StartedWith int
 	BlindAlert  []byte
@@ -67,12 +70,18 @@ type GameSpy struct {
 }
 
 func (g *GameSpy) Play(numberOfPlayers int, to io.Writer) {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+
 	g.StartCalled = true
 	g.StartedWith = numberOfPlayers
 	to.Write(g.BlindAlert)
 }
 
 func (g *GameSpy) Finish(winner string) {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+
 	g.FinishedCalled = true
 	g.FinishedWith = winner
 }
@@ -91,27 +100,33 @@ func AssertGameStarted(t testing.TB, started bool) {
 	}
 }
 
-func AssertGameStartedWith(t testing.TB, want, got int) {
+func AssertGameStartedWith(t testing.TB, want int, got *GameSpy) {
 	t.Helper()
 
+	got.mu.Lock()
+	defer got.mu.Unlock()
+
 	passed := retryUntil(500*time.Millisecond, func() bool {
-		return got == want
+		return got.StartedWith == want
 	})
 
 	if !passed {
-		t.Errorf("game should have started with %q but got %q", want, got)
+		t.Errorf("game should have started with %d but got %d", want, got.StartedWith)
 	}
 }
 
-func AssertGameFinishedWith(t testing.TB, want, got string) {
+func AssertGameFinishedWith(t testing.TB, want string, got *GameSpy) {
 	t.Helper()
 
+	got.mu.Lock()
+	defer got.mu.Unlock()
+
 	passed := retryUntil(500*time.Millisecond, func() bool {
-		return got == want
+		return got.FinishedWith == want
 	})
 
 	if !passed {
-		t.Errorf("game should have finished with %q but got %q", want, got)
+		t.Errorf("game should have finished with %q but got %q", want, got.FinishedWith)
 	}
 }
 
