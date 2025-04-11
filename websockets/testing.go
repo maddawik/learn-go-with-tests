@@ -93,14 +93,24 @@ func AssertGameStarted(t testing.TB, started bool) {
 
 func AssertGameStartedWith(t testing.TB, want, got int) {
 	t.Helper()
-	if got != want {
+
+	passed := retryUntil(500*time.Millisecond, func() bool {
+		return got == want
+	})
+
+	if !passed {
 		t.Errorf("game should have started with %q but got %q", want, got)
 	}
 }
 
 func AssertGameFinishedWith(t testing.TB, want, got string) {
 	t.Helper()
-	if got != want {
+
+	passed := retryUntil(500*time.Millisecond, func() bool {
+		return got == want
+	})
+
+	if !passed {
 		t.Errorf("game should have finished with %q but got %q", want, got)
 	}
 }
@@ -128,4 +138,14 @@ func AssertNoError(t testing.TB, err error) {
 	if err != nil {
 		t.Errorf("didn't expect an error but got one, %v", err)
 	}
+}
+
+func retryUntil(d time.Duration, f func() bool) bool {
+	deadline := time.Now().Add(d)
+	for time.Now().Before(deadline) {
+		if f() {
+			return true
+		}
+	}
+	return false
 }
