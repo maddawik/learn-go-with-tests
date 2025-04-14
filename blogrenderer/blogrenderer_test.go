@@ -68,8 +68,7 @@ Find out more at [Nintendo](https://nintendo.com)`
 	})
 }
 
-// FIX: `go test -bench=.` does not run this test?
-func BencharkRender(b *testing.B) {
+func BenchmarkRender(b *testing.B) {
 	aPost := blogrenderer.Post{
 		Title:       "hello world",
 		Description: "the description",

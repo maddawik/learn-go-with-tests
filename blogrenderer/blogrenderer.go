@@ -23,8 +23,7 @@ func (p Post) SanitisedTitle() string {
 }
 
 type PostRenderer struct {
-	templ    *template.Template
-	mdParser *parser.Parser
+	templ *template.Template
 }
 
 func NewPostRenderer() (*PostRenderer, error) {
@@ -33,14 +32,11 @@ func NewPostRenderer() (*PostRenderer, error) {
 		return nil, err
 	}
 
-	extensions := parser.CommonExtensions | parser.AutoHeadingIDs
-	parser := parser.NewWithExtensions(extensions)
-
-	return &PostRenderer{templ: templ, mdParser: parser}, nil
+	return &PostRenderer{templ: templ}, nil
 }
 
 func (r *PostRenderer) Render(w io.Writer, p Post) error {
-	if err := r.templ.ExecuteTemplate(w, "blog.gohtml", newPostVM(p, r)); err != nil {
+	if err := r.templ.ExecuteTemplate(w, "blog.gohtml", newPostVM(p)); err != nil {
 		return err
 	}
 	return nil
@@ -51,9 +47,11 @@ type postViewModel struct {
 	HTMLBody template.HTML
 }
 
-func newPostVM(p Post, r *PostRenderer) postViewModel {
+func newPostVM(p Post) postViewModel {
+	extensions := parser.CommonExtensions | parser.AutoHeadingIDs
+	parser := parser.NewWithExtensions(extensions)
 	vm := postViewModel{Post: p}
-	vm.HTMLBody = template.HTML(markdown.ToHTML([]byte(p.Body), r.mdParser, nil))
+	vm.HTMLBody = template.HTML(markdown.ToHTML([]byte(p.Body), parser, nil))
 	return vm
 }
 
